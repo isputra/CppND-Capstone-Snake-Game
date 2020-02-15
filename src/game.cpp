@@ -5,17 +5,19 @@
 
 Game::Game(std::size_t grid_width, std::size_t grid_height) :
       grid_width(grid_width),
-      grid_height(grid_height)
+      grid_height(grid_height),
+      snake(grid_width, grid_width),
+      food_normal(grid_width, grid_width, snake)
 {}
 
 void Game::Init(){
-  snake = std::make_shared<Snake>(grid_width, grid_width);
-  std::unique_ptr<FoodNormal> food_normal = std::make_unique<FoodNormal>(grid_width, grid_width, snake);
-  foods.push_back(std::move(food_normal));
-
-  for(auto &food: foods){
-    food->RunThread();
-  }
+  // snake = Snake(grid_width, grid_width);
+  // food_normal = std::make_unique<FoodNormal>(grid_width, grid_width, snake);
+  std::cout << "Game::Init..." << &snake << std::endl;
+  food_normal.RunThread(snake);
+  // for(auto &food: foods){
+  //   food->RunThread();
+  // }
 }
 
 void Game::Run(Controller const &controller, Renderer &renderer,
@@ -33,7 +35,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, snake);
     Update();
-    renderer.Render(snake, foods);
+    renderer.Render(snake, food_normal);
 
     frame_end = SDL_GetTicks();
 
@@ -44,7 +46,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 
     // After every second, update the window title.
     if (frame_end - title_timestamp >= 1000) {
-      renderer.UpdateWindowTitle(snake->GetScore(), frame_count);
+      renderer.UpdateWindowTitle(snake.GetScore(), frame_count);
       frame_count = 0;
       title_timestamp = frame_end;
     }
@@ -59,10 +61,10 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 }
 
 void Game::Update() {
-  if (!snake->alive) return;
+  if (!snake.alive) return;
 
-  snake->Update();
+  snake.Update();
 }
 
-int Game::GetScore() const { return snake->GetScore(); }
-int Game::GetSize() const { return snake->size; }
+int Game::GetScore() const { return snake.GetScore(); }
+int Game::GetSize() const { return snake.size; }

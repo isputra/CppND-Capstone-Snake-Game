@@ -5,7 +5,7 @@
 #include <memory>
 #include "SDL.h"
 #include "snake.h"
-#include "food.h"
+#include "food_normal.h"
 
 class Renderer {
  public:
@@ -13,7 +13,7 @@ class Renderer {
            const std::size_t grid_width, const std::size_t grid_height);
   ~Renderer();
 
-  void Render(std::shared_ptr<Snake> snake, std::vector<std::unique_ptr<Food>> &foods);
+  void Render(Snake &snake, FoodNormal &food_normal);
   void UpdateWindowTitle(int score, int fps);
 
  private:
