@@ -11,22 +11,22 @@
 
 enum class FoodType { food_normal, food_score, food_slow, food_stunt };
 
-class Food
-{
+class Food {
 public:
-    Food(int grid_width, int grid_height);
-
-    void RunThread(Snake &snake);
-    void RunFoodCycle(Snake &snake);
-    bool CheckIfFoodIsEaten(Snake &snake);
-    void GenerateFood(Snake &snake);
+    Food(int grid_width, int grid_height, std::shared_ptr<Snake> snake);
+    // ~Food(){std::cout << "Food::~Food() called..." << std::endl;}
+    void RunThread();
+    void RunFoodCycle();
+    bool CheckIfFoodIsEaten();
+    void GenerateFood();
     
-    virtual bool EvaluateIfFoodShouldBeGenerated(Snake &snake)=0;
-    virtual void RewardSnake(Snake &snake)=0;
+    virtual bool EvaluateIfFoodShouldBeGenerated()=0;
+    virtual void RewardSnake()=0;
 
     SDL_Point getPosition() const { return _position; }
 
     std::vector<std::thread> threads;
+    std::shared_ptr<Snake> snake;
 
 protected:
     SDL_Point _position;

@@ -20,14 +20,13 @@ class Game {
   int GetSize() const;
 
  private:
-  Snake snake;
+  std::shared_ptr<Snake> snake;
   std::vector<std::unique_ptr<Food>> foods;
   
   std::mutex _mutex;
 
   int grid_width;
   int grid_height;
-
 
   void Update();
 };

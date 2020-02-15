@@ -3,18 +3,18 @@
 #include <future>
 #include "SDL.h"
 
-Game::Game(std::size_t grid_width, std::size_t grid_height)
-    : snake(grid_width, grid_height),
+Game::Game(std::size_t grid_width, std::size_t grid_height) :
       grid_width(grid_width),
       grid_height(grid_height)
 {}
 
 void Game::Init(){
+  snake = std::make_shared<Snake>(grid_width, grid_width);
   std::unique_ptr<FoodNormal> food_normal = std::make_unique<FoodNormal>(grid_width, grid_width, snake);
   foods.push_back(std::move(food_normal));
 
   for(auto &food: foods){
-    food->RunThread(snake);
+    food->RunThread();
   }
 }
 
@@ -44,7 +44,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 
     // After every second, update the window title.
     if (frame_end - title_timestamp >= 1000) {
-      renderer.UpdateWindowTitle(snake.GetScore(), frame_count);
+      renderer.UpdateWindowTitle(snake->GetScore(), frame_count);
       frame_count = 0;
       title_timestamp = frame_end;
     }
@@ -59,10 +59,10 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 }
 
 void Game::Update() {
-  if (!snake.alive) return;
+  if (!snake->alive) return;
 
-  snake.Update();
+  snake->Update();
 }
 
-int Game::GetScore() const { return snake.GetScore(); }
-int Game::GetSize() const { return snake.size; }
+int Game::GetScore() const { return snake->GetScore(); }
+int Game::GetSize() const { return snake->size; }
