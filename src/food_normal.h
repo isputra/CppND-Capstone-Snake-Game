@@ -7,10 +7,10 @@
 class FoodNormal : public Food 
 {
 public:
-    FoodNormal(int grid_width, int grid_height, Snake &snake);
+    FoodNormal(int grid_width, int grid_height, std::unique_ptr<Snake> &snake);
     ~FoodNormal(){std::cout << "FoodNormal::~FoodNormal() called..." << std::endl;}
-    bool EvaluateIfFoodShouldBeGenerated(Snake &snake);
-    void RewardSnake(Snake &snake) override;
+    bool EvaluateIfFoodShouldBeGenerated(std::unique_ptr<Snake> &snake);
+    void RewardSnake(std::unique_ptr<Snake> &snake) override;
 };
 
 #endif

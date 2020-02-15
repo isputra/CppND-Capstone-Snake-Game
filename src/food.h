@@ -22,16 +22,16 @@ public:
             t.join();
         });
     }
-    void RunThread(Snake &snake);
-    void RunFoodCycle(Snake &snake);
-    bool CheckIfFoodIsEaten(Snake &snake);
-    void GenerateFood(Snake &snake);
+    void RunThread(std::unique_ptr<Snake> &snake);
+    void RunFoodCycle(std::unique_ptr<Snake> &snake);
+    bool CheckIfFoodIsEaten(std::unique_ptr<Snake> &snake);
+    void GenerateFood(std::unique_ptr<Snake> &snake);
     
-    bool EvaluateIfFoodShouldBeGenerated(Snake &snake){
+    bool EvaluateIfFoodShouldBeGenerated(std::unique_ptr<Snake> &snake){
         // std::cout << "Food::EvaluateIfFoodShouldBeGenerated() called..." << std::endl;
         return false;
     }
-    virtual void RewardSnake(Snake &snake)=0;
+    virtual void RewardSnake(std::unique_ptr<Snake> &snake)=0;
 
     SDL_Point getPosition() const { return _position; }
 

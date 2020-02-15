@@ -13,7 +13,7 @@ class Renderer {
            const std::size_t grid_width, const std::size_t grid_height);
   ~Renderer();
 
-  void Render(Snake &snake, FoodNormal &food_normal);
+  void Render(std::unique_ptr<Snake> &snake, std::unique_ptr<FoodNormal> &food_normal);
   void UpdateWindowTitle(int score, int fps);
 
  private:

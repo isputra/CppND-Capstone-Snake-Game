@@ -20,9 +20,9 @@ class Game {
   int GetSize() const;
 
  private:
-  Snake snake;
+  std::unique_ptr<Snake> snake;
   // std::vector<std::unique_ptr<Food>> foods;
-  FoodNormal food_normal;
+  std::unique_ptr<FoodNormal> food_normal;
   
   std::mutex _mutex;
 
