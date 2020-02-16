@@ -41,7 +41,8 @@ Renderer::~Renderer() {
 void Renderer::Render(std::unique_ptr<Snake> &snake, 
                       std::unique_ptr<FoodNormal> &food_normal, 
                       std::unique_ptr<FoodScore> &food_score,
-                      std::unique_ptr<FoodSlow> &food_slow
+                      std::unique_ptr<FoodSlow> &food_slow,
+                      std::unique_ptr<FoodShrink> &food_shrink
                       ) {
   SDL_Rect block;
   block.w = screen_width / grid_width;
@@ -67,6 +68,12 @@ void Renderer::Render(std::unique_ptr<Snake> &snake,
   SDL_SetRenderDrawColor(sdl_renderer, 0xAA, 0xAA, 0xAA, 0xFF);
   block.x = food_slow->getPosition().x * block.w;
   block.y = food_slow->getPosition().y * block.h;
+  SDL_RenderFillRect(sdl_renderer, &block);
+
+  // Render food shrink
+  SDL_SetRenderDrawColor(sdl_renderer, 0xBB, 0x00, 0xBB, 0xFF);
+  block.x = food_shrink->getPosition().x * block.w;
+  block.y = food_shrink->getPosition().y * block.h;
   SDL_RenderFillRect(sdl_renderer, &block);
 
   // Render snake's body

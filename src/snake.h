@@ -28,6 +28,8 @@ class Snake {
   float head_y;
   std::vector<SDL_Point> body;
 
+  void ShrinkBody(int number_body);
+
   int GetScore() const;
   void SetScore(int score);
 

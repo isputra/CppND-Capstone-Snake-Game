@@ -9,7 +9,7 @@
 #include "SDL.h"
 #include "snake.h"
 
-enum class FoodType { food_normal, food_score, food_slow, food_stunt };
+enum class FoodType { food_normal, food_score, food_slow, food_shrink };
 
 class Food {
 public:
