@@ -29,7 +29,7 @@ void Food::RunFoodCycle(std::unique_ptr<Snake> &snake){
     std::cout << "Food::RunFoodCycle thread id=" << std::this_thread::get_id() << std::endl;
     while (is_active)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
         if(CheckIfFoodIsEaten(snake) == true)
         {
             if(is_active) RewardSnake(snake);
@@ -67,8 +67,8 @@ void Food::GenerateFood(std::unique_ptr<Snake> &snake){
             _position.x = x;
             _position.y = y;
             if(_type == FoodType::food_normal) {
-                next_cycle = true;
-                // _condition.notify_one();
+                std::lock_guard<std::mutex> lock(_mutex);
+                next_cycle = _idCnt-1;
             }
             return;
         }
@@ -76,6 +76,6 @@ void Food::GenerateFood(std::unique_ptr<Snake> &snake){
 }
 
 int Food::_idCnt = 0;
-bool Food::next_cycle = false;
+int Food::next_cycle = 0;
 std::mutex Food::_mutex;
 std::condition_variable Food::_condition;

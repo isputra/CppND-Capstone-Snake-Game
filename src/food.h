@@ -43,7 +43,7 @@ protected:
     bool start_game{true};
     bool is_eaten{false};
     bool is_active{true};
-    static bool next_cycle;
+    static int next_cycle;
 
 private:
     static int _idCnt;

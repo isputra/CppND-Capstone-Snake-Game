@@ -8,15 +8,11 @@ FoodScore::FoodScore(int grid_width, int grid_height, std::unique_ptr<Snake> &sn
 }
 
 bool FoodScore::EvaluateIfFoodShouldBeGenerated(std::unique_ptr<Snake> &snake) {
-    // std::cout << "FoodScore::EvaluateIfFoodShouldBeGenerated.." << std::endl;
-    // std::unique_lock<std::mutex> lck(_mutex);
-    // _condition.wait(lck, [this]{ 
-    //     std::cout << "FoodScore::EvaluateIfFoodShouldBeGenerated x=" << _position.x << " y=" << _position.y << " thread id=" << std::this_thread::get_id() << " next_cycle="<< next_cycle << std::endl;
-    //     return next_cycle;
-    //     });
-    if(!next_cycle) return false;
-    next_cycle = false;
-    std::cout << "FoodScore::EvaluateIfFoodShouldBeGenerated passed next cycle.." << std::endl;
+    std::unique_lock<std::mutex> lck(_mutex);
+    if(next_cycle <= 0) return false;
+    std::cout << "FoodScore::EvaluateIfFoodShouldBeGenerated next_cycle=" << next_cycle << std::endl;
+    next_cycle = next_cycle - 1;
+    lck.unlock();
 
     std::uniform_int_distribution<int> distr(0, 100);
     int score = snake->GetScore();
