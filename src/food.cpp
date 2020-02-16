@@ -52,7 +52,6 @@ bool Food::CheckIfFoodIsEaten(std::unique_ptr<Snake> &snake){
         is_eaten = true;
         return true;
     }
-    is_eaten = false;
     return false;
 }
 
@@ -66,6 +65,7 @@ void Food::GenerateFood(std::unique_ptr<Snake> &snake){
             std::cout << "Food #"<< getID() <<" Generated at x=" << x << " y=" << y << " thread id=" << std::this_thread::get_id() << std::endl;
             _position.x = x;
             _position.y = y;
+            is_eaten = false;
             if(_type == FoodType::food_normal) {
                 std::lock_guard<std::mutex> lock(_mutex);
                 next_cycle = _idCnt-1;

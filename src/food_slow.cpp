@@ -14,16 +14,19 @@ bool FoodSlow::EvaluateIfFoodShouldBeGenerated(std::unique_ptr<Snake> &snake) {
     next_cycle = next_cycle - 1;
     lck.unlock();
 
-    std::uniform_int_distribution<float> distr(0, 50);
+    std::uniform_int_distribution<float> distr(0, 100);
     float speed = snake->speed;
     float random = distr(engine);
     float speedMin = random/100;
     std::cout << "FoodSlow::EvaluateIfFoodShouldBeGenerated speedMin="<< std::to_string(speedMin) << " speed="<< std::to_string(speed) << std::endl;
     if(speed > 0.1 && speedMin < speed){
-        if(_position.x == -1 && _position.y == -1){
-            // std::cout << "FoodSlow::EvaluateIfFoodShouldBeGenerated random="<< random << std::endl;
+        if(start_game) {
+            std::cout << "FoodSlow::EvaluateIfFoodShouldBeGenerated start_game=" << start_game << std::endl;
+            start_game = false;
             return true;
         }
+        std::cout << "FoodSlow::EvaluateIfFoodShouldBeGenerated is_eaten=" << is_eaten << std::endl;
+        return is_eaten;
     }
     return false;
 }
