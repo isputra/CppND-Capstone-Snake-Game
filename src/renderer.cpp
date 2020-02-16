@@ -38,7 +38,11 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-void Renderer::Render(std::unique_ptr<Snake> &snake, std::unique_ptr<FoodNormal> &food_normal, std::unique_ptr<FoodScore> &food_score) {
+void Renderer::Render(std::unique_ptr<Snake> &snake, 
+                      std::unique_ptr<FoodNormal> &food_normal, 
+                      std::unique_ptr<FoodScore> &food_score,
+                      std::unique_ptr<FoodSlow> &food_slow
+                      ) {
   SDL_Rect block;
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
@@ -51,13 +55,19 @@ void Renderer::Render(std::unique_ptr<Snake> &snake, std::unique_ptr<FoodNormal>
   SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xCC, 0x00, 0xFF);
   block.x = food_normal->getPosition().x * block.w;
   block.y = food_normal->getPosition().y * block.h;
-  SDL_RenderFillRect(sdl_renderer, &block);    
+  SDL_RenderFillRect(sdl_renderer, &block);
 
   // Render food score
   SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0xCC, 0xCC, 0xFF);
   block.x = food_score->getPosition().x * block.w;
   block.y = food_score->getPosition().y * block.h;
-  SDL_RenderFillRect(sdl_renderer, &block);    
+  SDL_RenderFillRect(sdl_renderer, &block);
+
+  // Render food slow
+  SDL_SetRenderDrawColor(sdl_renderer, 0xAA, 0xAA, 0xAA, 0xFF);
+  block.x = food_slow->getPosition().x * block.w;
+  block.y = food_slow->getPosition().y * block.h;
+  SDL_RenderFillRect(sdl_renderer, &block);
 
   // Render snake's body
   SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);

@@ -7,6 +7,7 @@
 #include "snake.h"
 #include "food_normal.h"
 #include "food_score.h"
+#include "food_slow.h"
 
 class Renderer {
  public:
@@ -14,7 +15,10 @@ class Renderer {
            const std::size_t grid_width, const std::size_t grid_height);
   ~Renderer();
 
-  void Render(std::unique_ptr<Snake> &snake, std::unique_ptr<FoodNormal> &food_normal, std::unique_ptr<FoodScore> &food_score);
+  void Render(std::unique_ptr<Snake> &snake, 
+              std::unique_ptr<FoodNormal> &food_normal, 
+              std::unique_ptr<FoodScore> &food_score, 
+              std::unique_ptr<FoodSlow> &food_slow);
   void UpdateWindowTitle(int score, int fps);
 
  private:

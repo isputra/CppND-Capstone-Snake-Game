@@ -9,6 +9,7 @@
 #include "snake.h"
 #include "food_normal.h"
 #include "food_score.h"
+#include "food_slow.h"
 
 class Game {
  public:
@@ -25,6 +26,7 @@ class Game {
   // std::vector<std::unique_ptr<Food>> foods;
   std::unique_ptr<FoodNormal> food_normal;
   std::unique_ptr<FoodScore> food_score;
+  std::unique_ptr<FoodSlow> food_slow;
   
   std::mutex _mutex;
 
