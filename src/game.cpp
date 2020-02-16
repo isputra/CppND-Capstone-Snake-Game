@@ -11,12 +11,16 @@ Game::Game(std::size_t grid_width, std::size_t grid_height) :
 {}
 
 void Game::Init(){
+  std::cout << "Game::Init..." << &snake << std::endl;
   snake = std::make_unique<Snake>(grid_width, grid_width);
   food_normal = std::make_unique<FoodNormal>(grid_width, grid_width, snake);
-  std::cout << "Game::Init..." << &snake << std::endl;
   food_normal->RunThread(snake);
+  food_score = std::make_unique<FoodScore>(grid_width, grid_width, snake);
+  food_score->RunThread(snake);
+  // foods.push_back(std::move(std::make_unique<FoodNormal>(grid_width, grid_width, snake)));
+  // foods.emplace_back(std::make_unique<FoodScore>(grid_width, grid_width, snake));
   // for(auto &food: foods){
-  //   food->RunThread();
+  //   food->RunThread(snake);
   // }
 }
 
@@ -35,7 +39,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, snake);
     Update();
-    renderer.Render(snake, food_normal);
+    renderer.Render(snake, food_normal, food_score);
 
     frame_end = SDL_GetTicks();
 

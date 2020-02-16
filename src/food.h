@@ -14,40 +14,39 @@ enum class FoodType { food_normal, food_score, food_slow, food_stunt };
 class Food {
 public:
     Food(int grid_width, int grid_height);
-    ~Food(){
-        is_active = false;
-        std::cout << "Food::~Food() called..." << std::endl;
-        std::for_each(threads.begin(), threads.end(), [](std::thread &t) {
-            std::cout << "thread id=" << t.get_id() << std::endl;
-            t.join();
-        });
-    }
+    ~Food();
     void RunThread(std::unique_ptr<Snake> &snake);
     void RunFoodCycle(std::unique_ptr<Snake> &snake);
     bool CheckIfFoodIsEaten(std::unique_ptr<Snake> &snake);
     void GenerateFood(std::unique_ptr<Snake> &snake);
     
-    bool EvaluateIfFoodShouldBeGenerated(std::unique_ptr<Snake> &snake){
-        // std::cout << "Food::EvaluateIfFoodShouldBeGenerated() called..." << std::endl;
-        return false;
-    }
+    virtual bool EvaluateIfFoodShouldBeGenerated(std::unique_ptr<Snake> &snake)=0;
     virtual void RewardSnake(std::unique_ptr<Snake> &snake)=0;
 
     SDL_Point getPosition() const { return _position; }
-
-    std::vector<std::thread> threads;
+    int getID() { return _id; }
 
 protected:
     SDL_Point _position;
+    FoodType _type;
+    int _id;
+
     std::random_device dev;
     std::mt19937 engine;
     std::uniform_int_distribution<int> random_w;
     std::uniform_int_distribution<int> random_h;
 
+    std::vector<std::thread> threads;
+    static std::mutex _mutex;
+    static std::condition_variable _condition;
+
+    bool start_game{true};
     bool is_eaten{false};
     bool is_active{true};
+    static bool next_cycle;
 
 private:
+    static int _idCnt;
 };
 
 #endif
