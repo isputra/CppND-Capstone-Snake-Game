@@ -7,26 +7,30 @@ Food::Food(int grid_width, int grid_height) :
     random_h(0, static_cast<int>(grid_height-1)),
     _position{-1,-1}
 {
-    std::cout << "Food::Food..." << std::endl;
     _id = _idCnt++;
+    std::unique_lock<std::mutex> lck(_mutex_cout);
+    std::cout << "Food #" << getID() << " Constructor..."<< std::endl;
+    lck.unlock();
 }
 
 Food::~Food(){
     is_active = false; // we need to signal the thread that the class has deen destroyed
-    std::cout << "Food::~Food() called..." << std::endl;
+    std::unique_lock<std::mutex> lck(_mutex_cout);
+    std::cout << "Food #"<< getID() <<" destructor is called..." << std::endl;
+    lck.unlock();
     std::for_each(threads.begin(), threads.end(), [](std::thread &t) {
-        std::cout << "Ending thread id=" << t.get_id() << std::endl;
         t.join();
     });
 }
 
 void Food::RunThread(std::unique_ptr<Snake> &snake){
-    std::cout << "Food::RunThread..." << std::endl;
     threads.emplace_back(std::thread(&Food::RunFoodCycle, this, std::ref(snake)));
 }
 
 void Food::RunFoodCycle(std::unique_ptr<Snake> &snake){
-    std::cout << "Food::RunFoodCycle thread id=" << std::this_thread::get_id() << std::endl;
+    std::unique_lock<std::mutex> lck(_mutex_cout);
+    std::cout << "Food #"<< getID() <<" RunFoodCycle with thread id=" << std::this_thread::get_id() << std::endl;
+    lck.unlock();
     while (is_active)
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -48,7 +52,9 @@ bool Food::CheckIfFoodIsEaten(std::unique_ptr<Snake> &snake){
     int new_y = static_cast<int>(snake->head_y);
 
     if (_position.x == new_x && _position.y == new_y) {
-        // std::cout << "Food is about to be eaten #" << getID() << " : (" << _position.x << ", " << _position.y << ") -> (" << new_x << ", " << new_y << ")" << std::endl;
+        std::unique_lock<std::mutex> lck(_mutex_cout);
+        std::cout << "Food #" << getID() << " is eaten at (" << _position.x << ", " << _position.y << ")" << std::endl;
+        lck.unlock();
         _position.x=-1; // remove food from screen
         _position.y=-1;
         is_eaten = true;
@@ -58,13 +64,14 @@ bool Food::CheckIfFoodIsEaten(std::unique_ptr<Snake> &snake){
 }
 
 void Food::GenerateFood(std::unique_ptr<Snake> &snake){
-    std::cout << "Generate Food #"<< getID() <<" thread id=" << std::this_thread::get_id() << std::endl;
     int x, y;
     while (true) {
         x = random_w(engine);
         y = random_h(engine);
         if (!snake->SnakeCell(x, y)) {
-            std::cout << "Food #"<< getID() <<" Generated at x=" << x << " y=" << y << " thread id=" << std::this_thread::get_id() << std::endl;
+            std::unique_lock<std::mutex> lck(_mutex_cout);
+            std::cout << "Food #"<< getID() <<" is generated at x=" << x << " y=" << y << " thread id=" << std::this_thread::get_id() << std::endl;
+            lck.unlock();
             _position.x = x;
             _position.y = y;
             is_eaten = false;
@@ -75,7 +82,6 @@ void Food::GenerateFood(std::unique_ptr<Snake> &snake){
                 // set timer to remove food
                 auto remove_thread = std::thread(&Food::RemoveUntil, this);
                 remove_thread.detach();
-                std::cout << "Food #" << getID() << " will be removed soon.." << std::endl;
             }
             return;
         }
@@ -83,8 +89,9 @@ void Food::GenerateFood(std::unique_ptr<Snake> &snake){
 }
 
 void Food::RemoveUntil(){
-    Uint32 frame_start = SDL_GetTicks();
-    std::cout << "Food::RemoveUntil #" << getID() << " thread id=" << std::this_thread::get_id() << std::endl;
+    std::unique_lock<std::mutex> lck(_mutex_cout);
+    std::cout << "Food #" << getID() << " will be removed in 5 seconds.. thread id=" << std::this_thread::get_id() << std::endl;
+    lck.unlock();
     std::this_thread::sleep_for(std::chrono::seconds(5));
     
     if(is_eaten) return;
@@ -92,10 +99,10 @@ void Food::RemoveUntil(){
     _position.x=-1; // remove food from screen
     _position.y=-1;
     is_eaten = true;
-    std::cout << "Food #" << getID() << " is removed after " << std::to_string(SDL_GetTicks() - frame_start) << " milliseconds.." << std::endl;
 }
 
 int Food::_idCnt = 0;
 int Food::next_cycle = 0;
 std::mutex Food::_mutex;
+std::mutex Food::_mutex_cout;
 std::condition_variable Food::_condition;

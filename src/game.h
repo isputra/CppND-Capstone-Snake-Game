@@ -24,7 +24,6 @@ class Game {
 
  private:
   std::unique_ptr<Snake> snake;
-  // std::vector<std::unique_ptr<Food>> foods;
   std::unique_ptr<FoodNormal> food_normal;
   std::unique_ptr<FoodScore> food_score;
   std::unique_ptr<FoodSlow> food_slow;

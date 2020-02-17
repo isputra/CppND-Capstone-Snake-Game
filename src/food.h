@@ -28,11 +28,9 @@ public:
     bool CheckSnakeCondition(T const &value_attribute, T const &value_min, T const &random_value) {
         if(value_attribute > value_min && random_value < value_attribute){
             if(first_food) {
-                std::cout << "Food::CheckSnakeCondition first_food=" << first_food << std::endl;
                 first_food = false;
                 return true;
             }
-            std::cout << "Food::CheckSnakeCondition is_eaten=" << is_eaten << std::endl;
             return is_eaten;
         }
         return false;
@@ -52,6 +50,7 @@ protected:
     std::uniform_int_distribution<int> random_h;
 
     std::vector<std::thread> threads;
+    static std::mutex _mutex_cout;
     static std::mutex _mutex;
     static std::condition_variable _condition;
 

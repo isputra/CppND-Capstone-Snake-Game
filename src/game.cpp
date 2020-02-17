@@ -6,12 +6,10 @@
 Game::Game(std::size_t grid_width, std::size_t grid_height) :
       grid_width(grid_width),
       grid_height(grid_height)
-      // snake(grid_width, grid_width)
-      // food_normal(grid_width, grid_width, snake)
 {}
 
 void Game::Init(){
-  std::cout << "Game::Init..." << &snake << std::endl;
+  std::cout << "Game::Init..." << std::endl;
   snake = std::make_unique<Snake>(grid_width, grid_width);
   food_normal = std::make_unique<FoodNormal>(grid_width, grid_width, snake);
   food_normal->RunThread(snake);
@@ -21,11 +19,6 @@ void Game::Init(){
   food_slow->RunThread(snake);
   food_shrink = std::make_unique<FoodShrink>(grid_width, grid_width, snake);
   food_shrink->RunThread(snake);
-  // foods.push_back(std::move(std::make_unique<FoodNormal>(grid_width, grid_width, snake)));
-  // foods.emplace_back(std::make_unique<FoodScore>(grid_width, grid_width, snake));
-  // for(auto &food: foods){
-  //   food->RunThread(snake);
-  // }
 }
 
 void Game::Run(Controller const &controller, Renderer &renderer,

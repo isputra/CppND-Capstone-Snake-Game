@@ -3,7 +3,9 @@
 FoodNormal::FoodNormal(int grid_width, int grid_height, std::unique_ptr<Snake> &snake) :
     Food(grid_width, grid_height)
 {
+    std::unique_lock<std::mutex> lck(_mutex_cout);
     std::cout << "FoodNormal::FoodNormal..." << std::endl;
+    lck.unlock();
     _type = FoodType::food_normal;
 }
 
@@ -12,16 +14,16 @@ bool FoodNormal::EvaluateIfFoodShouldBeGenerated(std::unique_ptr<Snake> &snake) 
         first_food = false;
         return true;
     }
-    // std::cout << "FoodNormal::EvaluateIfFoodShouldBeGenerated.." << std::endl;
     return is_eaten;
 }
 
 void FoodNormal::RewardSnake(std::unique_ptr<Snake> &snake) {
-    std::cout << "FoodNormal::Rewardsnake->.." << std::endl;
     snake->SetScore(snake->GetScore()+1);
     snake->GrowBody();
     snake->speed += 0.01;
-    std::cout << "snake->GetScore=" << snake->GetScore() << std::endl;
+    std::unique_lock<std::mutex> lck(_mutex_cout);
+    std::cout << "FoodNormal::Rewardsnake score=" << snake->GetScore() <<" size="<< snake->size << " speed=" << snake->speed << std::endl;
+    lck.unlock();
 }
 
 void FoodNormal::RemoveUntil() {} // normal food won't be removed in timely manner
