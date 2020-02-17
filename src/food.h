@@ -6,6 +6,7 @@
 #include <thread>
 #include <vector>
 #include <random>
+#include <algorithm>
 #include "SDL.h"
 #include "snake.h"
 
