@@ -4,7 +4,7 @@
 #include "food.h"
 #include "snake.h"
 
-class FoodShrink : public Food 
+class FoodShrink : public Food
 {
 public:
     FoodShrink(int grid_width, int grid_height, std::unique_ptr<Snake> &snake);

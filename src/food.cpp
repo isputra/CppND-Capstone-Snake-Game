@@ -77,6 +77,20 @@ void Food::GenerateFood(std::unique_ptr<Snake> &snake){
     }
 }
 
+template <typename T>
+bool Food::CheckSnakeCondition(T const &value_attribute, T const &value_min, T const &random_value) {
+    if(value_attribute > value_min && random_value < value_attribute){
+        if(start_game) {
+            std::cout << "Food::CheckSnakeCondition start_game=" << start_game << std::endl;
+            start_game = false;
+            return true;
+        }
+        std::cout << "Food::CheckSnakeCondition is_eaten=" << is_eaten << std::endl;
+        return is_eaten;
+    }
+    return false;
+}
+
 int Food::_idCnt = 0;
 int Food::next_cycle = 0;
 std::mutex Food::_mutex;

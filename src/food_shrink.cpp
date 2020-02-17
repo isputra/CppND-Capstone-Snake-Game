@@ -16,18 +16,20 @@ bool FoodShrink::EvaluateIfFoodShouldBeGenerated(std::unique_ptr<Snake> &snake) 
 
     std::uniform_int_distribution<int> distr(0, 100);
     int size = snake->size;
-    int sizeMin = distr(engine);
-    std::cout << "FoodShrink::EvaluateIfFoodShouldBeGenerated sizeMin="<< std::to_string(sizeMin) << " size="<< std::to_string(size) << std::endl;
-    if(size > 1 && sizeMin < size){
-        if(start_game) {
-            std::cout << "FoodShrink::EvaluateIfFoodShouldBeGenerated start_game=" << start_game << std::endl;
-            start_game = false;
-            return true;
-        }
-        std::cout << "FoodShrink::EvaluateIfFoodShouldBeGenerated is_eaten=" << is_eaten << std::endl;
-        return is_eaten;
-    }
-    return false;
+    int random = distr(engine);
+    int size_min = 1;
+    std::cout << "FoodShrink::EvaluateIfFoodShouldBeGenerated random="<< std::to_string(random) << " size="<< std::to_string(size) << std::endl;
+    return CheckSnakeCondition(size, size_min, random);
+    // if(size > size_min && random < size){
+    //     if(start_game) {
+    //         std::cout << "FoodShrink::EvaluateIfFoodShouldBeGenerated start_game=" << start_game << std::endl;
+    //         start_game = false;
+    //         return true;
+    //     }
+    //     std::cout << "FoodShrink::EvaluateIfFoodShouldBeGenerated is_eaten=" << is_eaten << std::endl;
+    //     return is_eaten;
+    // }
+    // return false;
 }
 
 void FoodShrink::RewardSnake(std::unique_ptr<Snake> &snake) {
