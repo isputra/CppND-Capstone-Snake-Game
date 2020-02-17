@@ -82,7 +82,7 @@ void Renderer::Render(std::unique_ptr<Snake> &snake,
   DrawCircle(sdl_renderer, pos_x, pos_y, diameter/2);
 
   // Render snake's body
-  SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+  SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0xCC, 0x7F, 0xFF);
   for (SDL_Point const &point : snake->body) {
     block.x = point.x * block.w;
     block.y = point.y * block.h;
@@ -93,7 +93,7 @@ void Renderer::Render(std::unique_ptr<Snake> &snake,
   block.x = static_cast<int>(snake->head_x) * block.w;
   block.y = static_cast<int>(snake->head_y) * block.h;
   if (snake->alive) {
-    SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
+    SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x55, 0x7F, 0xFF);
   } else {
     SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0x00, 0x00, 0xFF);
   }
