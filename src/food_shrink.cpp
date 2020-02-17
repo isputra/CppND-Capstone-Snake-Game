@@ -14,22 +14,12 @@ bool FoodShrink::EvaluateIfFoodShouldBeGenerated(std::unique_ptr<Snake> &snake) 
     next_cycle = next_cycle - 1;
     lck.unlock();
 
-    std::uniform_int_distribution<int> distr(0, 10);
+    std::uniform_int_distribution<int> distr(0, RANDOM_MAX);
     int size = snake->size;
     int random = distr(engine);
-    int size_min = 1;
+    int size_min = SIZE_MIN;
     // std::cout << "FoodShrink::EvaluateIfFoodShouldBeGenerated random="<< std::to_string(random) << " size="<< std::to_string(size) << std::endl;
     return CheckSnakeCondition(size, size_min, random);
-    // if(size > size_min && random < size){
-    //     if(first_food) {
-    //         std::cout << "FoodShrink::EvaluateIfFoodShouldBeGenerated first_food=" << first_food << std::endl;
-    //         first_food = false;
-    //         return true;
-    //     }
-    //     std::cout << "FoodShrink::EvaluateIfFoodShouldBeGenerated is_eaten=" << is_eaten << std::endl;
-    //     return is_eaten;
-    // }
-    // return false;
 }
 
 void FoodShrink::RewardSnake(std::unique_ptr<Snake> &snake) {

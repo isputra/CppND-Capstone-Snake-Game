@@ -1,6 +1,9 @@
 #ifndef FOOD_SLOW_H
 #define FOOD_SLOW_H
 
+#define RANDOM_MAX 90
+#define SPEED_MIN 0.30f
+
 #include "food.h"
 #include "snake.h"
 
