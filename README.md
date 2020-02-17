@@ -1,12 +1,29 @@
-# CPPND: Capstone Snake Game Example
+# CPPND: Capstone Snake Game
 
-This is a starter repo for the Capstone project in the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213). The code for this repo was inspired by [this](https://codereview.stackexchange.com/questions/212296/snake-game-in-c-with-sdl) excellent StackOverflow post and set of responses.
+This project is my version of Snake Game, which I developed as part of Capstone project in the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213). The code for this repo was inspired by [this](https://codereview.stackexchange.com/questions/212296/snake-game-in-c-with-sdl) excellent StackOverflow post and set of responses.
 
 <img src="snake_game.gif"/>
 
-The Capstone Project gives you a chance to integrate what you've learned throughout this program. This project will become an important part of your portfolio to share with current and future colleagues and employers.
+## Class Structure
+There are several files/classes in this program : 
+1. Game : Instantiate all the elements of the game such as Snake and Foods.
+2. Controller : Handles the input from keyboard. It accepts key up, key down, key left, and key right which allow user to navigate the Snake.
+3. Renderer : Renders all elements using SDL2.
+4. Snake : Defines the behaviour of the snake such as its size, speed, and score.
+5. Food : Base class of food element. Each food gives different reward after being eaten. There are 4 types of foods : 
+  1. Normal food (`FoodNormal`), which rewards the user normaly such as add score, grow the snake's body, and increase its speed. Every time the snake eat this type of food, another one will be generated immediately and placed randomly. Other type of food than this one may be called special food.
+  2. Score booster food (`FoodScore`), which gives more score that normal food, but it surfaces rarely and only when the Snake has achieved a high score.
+  3. Food that reduce speed (`FoodSlow`), which reduces the speed of the Snake. It appears rarely and only when the Snake runs too fast.
+  4. Food that shrink the body (`FoodShrink`), which trims the snake instead of growing it. It appears rarely and only when the Snake's body is too long.
 
-In this project, you can build your own C++ application or extend this Snake game, following the principles you have learned throughout this Nanodegree Program. This project will demonstrate that you can independently create applications using a wide range of C++ features.
+Each food is spawn into its own thread which executes an infinite while loop that only stops when the Food class is destroyed (when the game is stopped). Inside each thread, we examine whether or not the food is eaten by the Snake, reward it accordingly, and decide whether or not to generate more foods or remove a food.
+
+## Rubric Points
+1. The project demonstrates an understanding of C++ functions and control structures: See Food.cpp part Food::RunFoodCycle line 37, 42, 44, 46. 
+2. The project uses Object Oriented Programming techniques: See Food.h line 15 to end.
+3. Derived class functions override virtual base class functions. See food_score.h line 14, 15 and food_score.cpp line 12, 25.
+4. The project uses smart pointers instead of raw pointers: See game.h line 26-30.
+5. The project uses multithreading: See food.cpp line 27, 84.
 
 ## Dependencies for Running Locally
 * cmake >= 3.7
