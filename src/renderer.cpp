@@ -56,7 +56,7 @@ void Renderer::Render(std::unique_ptr<Snake> &snake,
   SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xCC, 0x00, 0xFF);
   block.x = food_normal->getPosition().x * block.w;
   block.y = food_normal->getPosition().y * block.h;
-  SDL_RenderFillRect(sdl_renderer, &block);
+  SDL_RenderDrawRect(sdl_renderer, &block);
 
   // Render food score
   SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0xCC, 0xCC, 0xFF);

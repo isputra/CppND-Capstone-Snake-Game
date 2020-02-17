@@ -40,10 +40,10 @@ protected:
     static std::mutex _mutex;
     static std::condition_variable _condition;
 
-    bool start_game{true};
-    bool is_eaten{false};
-    bool is_active{true};
-    static int next_cycle;
+    bool start_game{true}; // Tell each food if it's its first generation.
+    bool is_eaten{false}; // Detect whether the food is on the screen or not.
+    bool is_active{true}; // Flag indicating we've stopped the game. Mainly used to prevent calling virtual method from parent class.
+    static int next_cycle; // How many other type food that we want to generate.
 
 private:
     static int _idCnt;

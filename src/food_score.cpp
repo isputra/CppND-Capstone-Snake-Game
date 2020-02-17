@@ -14,7 +14,7 @@ bool FoodScore::EvaluateIfFoodShouldBeGenerated(std::unique_ptr<Snake> &snake) {
     next_cycle = next_cycle - 1;
     lck.unlock();
 
-    std::uniform_int_distribution<int> distr(0, 30);
+    std::uniform_int_distribution<> distr(0, 30);
     int score = snake->GetScore();
     int score_min = distr(engine);
     std::cout << "FoodScore::EvaluateIfFoodShouldBeGenerated score_min="<< score_min << std::endl;

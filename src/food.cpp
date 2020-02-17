@@ -12,7 +12,7 @@ Food::Food(int grid_width, int grid_height) :
 }
 
 Food::~Food(){
-    is_active = false;
+    is_active = false; // we've stopped playing
     std::cout << "Food::~Food() called..." << std::endl;
     std::for_each(threads.begin(), threads.end(), [](std::thread &t) {
         std::cout << "Ending thread id=" << t.get_id() << std::endl;
@@ -32,6 +32,8 @@ void Food::RunFoodCycle(std::unique_ptr<Snake> &snake){
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
         if(CheckIfFoodIsEaten(snake) == true)
         {
+            // Here we need to check with is_active. 
+            // Otherwise, because of data race, we could call methods whose child class has been destructed.
             if(is_active) RewardSnake(snake);
         }
         if(is_active && EvaluateIfFoodShouldBeGenerated(snake) == true)

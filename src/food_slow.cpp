@@ -14,9 +14,9 @@ bool FoodSlow::EvaluateIfFoodShouldBeGenerated(std::unique_ptr<Snake> &snake) {
     next_cycle = next_cycle - 1;
     lck.unlock();
 
-    std::uniform_int_distribution<float> distr(0, 100);
+    std::uniform_int_distribution<> distr(0, 100);
     float speed = snake->speed;
-    float random = distr(engine);
+    int random = distr(engine);
     float speedMin = random/100;
     std::cout << "FoodSlow::EvaluateIfFoodShouldBeGenerated speedMin="<< std::to_string(speedMin) << " speed="<< std::to_string(speed) << std::endl;
     if(speed > 0.1 && speedMin < speed){
