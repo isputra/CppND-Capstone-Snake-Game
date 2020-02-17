@@ -51,17 +51,23 @@ protected:
     std::uniform_int_distribution<int> random_h;
 
     std::vector<std::thread> threads;
-    static std::mutex _mutex_cout;
+    static std::mutex _mutex_cout; // mutex to protect the use of std::cout
     static std::mutex _mutex;
     static std::condition_variable _condition;
 
     bool first_food{true}; // Indicate if it's the first food generated.
+
     bool is_eaten{false}; // Detect whether the food is on the screen or not.
-    bool is_active{true}; // Flag indicating we've stopped the game. Mainly used to prevent calling virtual method from parent class.
-    static int next_cycle; // How many other type food that we want to generate.
+
+    bool is_active{true}; // Flag indicating that we've stopped the game. 
+                          // It is mainly used to prevent calling virtual method from parent class.
+    
+    static int next_cycle; // Indicates how many other type of special food that we want to generate. 
+                           // Basically, we'll only consider to generate special food whenever normal food is generated immediately.
+                           // See base class method GenerateFood and derived class method EvaluateIfFoodShouldBeGenerated.
 
 private:
-    static int _idCnt;
+    static int _idCnt; // count the number of food instantiated and assign this value as an ID
 };
 
 #endif

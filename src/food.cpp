@@ -31,16 +31,17 @@ void Food::RunFoodCycle(std::unique_ptr<Snake> &snake){
     std::unique_lock<std::mutex> lck(_mutex_cout);
     std::cout << "Food #"<< getID() <<" RunFoodCycle with thread id=" << std::this_thread::get_id() << std::endl;
     lck.unlock();
-    while (is_active)
+    while (is_active) // it is useful to use flag is_active (which is set to false at Food destructor) instead of indefinite true in order to control the lifetime of the thread.
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        if(CheckIfFoodIsEaten(snake) == true)
+        std::this_thread::sleep_for(std::chrono::milliseconds(1)); 
+        if(true == CheckIfFoodIsEaten(snake))
         {
-            // Because of data race, we could call methods whose child class has been destructed.
-            // Therefore here we need to check with is_active. 
+            // Because of data race, we could call methods of a derived class that has been destructed.
+            // When it happens, the program will try to reach its base class method which is a virtual method.
+            // Therefore here we need to check with is_active which is set to false at base class destructor.
             if(is_active) RewardSnake(snake);
         }
-        if(is_active && EvaluateIfFoodShouldBeGenerated(snake) == true)
+        if(true == is_active && true == EvaluateIfFoodShouldBeGenerated(snake))
         {
             GenerateFood(snake);
         }
@@ -77,7 +78,7 @@ void Food::GenerateFood(std::unique_ptr<Snake> &snake){
             is_eaten = false;
             if(_type == FoodType::food_normal) {
                 std::lock_guard<std::mutex> lock(_mutex);
-                next_cycle = _idCnt-1;
+                next_cycle = _idCnt-1; // When the normal food is generate, open the possibility to generate special food.
             } else {
                 // set timer to remove food
                 auto remove_thread = std::thread(&Food::RemoveUntil, this);
@@ -98,7 +99,11 @@ void Food::RemoveUntil(){
 
     _position.x=-1; // remove food from screen
     _position.y=-1;
-    is_eaten = true;
+    is_eaten = true; // we need to set this to true which indicates that the food is not on the screen anymore.
+
+    lck.lock();
+    std::cout << "Food #" << getID() << " has been removed.." << std::endl;
+    lck.unlock();
 }
 
 int Food::_idCnt = 0;
