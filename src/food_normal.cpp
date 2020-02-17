@@ -8,8 +8,8 @@ FoodNormal::FoodNormal(int grid_width, int grid_height, std::unique_ptr<Snake> &
 }
 
 bool FoodNormal::EvaluateIfFoodShouldBeGenerated(std::unique_ptr<Snake> &snake) {
-    if(start_game) {
-        start_game = false;
+    if(first_food) {
+        first_food = false;
         return true;
     }
     // std::cout << "FoodNormal::EvaluateIfFoodShouldBeGenerated.." << std::endl;
@@ -23,3 +23,5 @@ void FoodNormal::RewardSnake(std::unique_ptr<Snake> &snake) {
     snake->speed += 0.01;
     std::cout << "snake->GetScore=" << snake->GetScore() << std::endl;
 }
+
+void FoodNormal::RemoveUntil() {} // normal food won't be removed in timely manner

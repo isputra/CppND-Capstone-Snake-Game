@@ -14,14 +14,15 @@ bool FoodScore::EvaluateIfFoodShouldBeGenerated(std::unique_ptr<Snake> &snake) {
     next_cycle = next_cycle - 1;
     lck.unlock();
 
-    std::uniform_int_distribution<> distr(0, 30);
+    std::uniform_int_distribution<> distr(0, 100);
     int score = snake->GetScore();
-    int score_min = distr(engine);
-    std::cout << "FoodScore::EvaluateIfFoodShouldBeGenerated score_min="<< score_min << std::endl;
-    if(score > 0 && score_min < score){
-        if(start_game) {
-            std::cout << "FoodScore::EvaluateIfFoodShouldBeGenerated start_game=" << start_game << std::endl;
-            start_game = false;
+    int random = distr(engine);
+    int score_min = 10;
+    std::cout << "FoodScore::EvaluateIfFoodShouldBeGenerated random="<< random << std::endl;
+    if(score > score_min && random < score){
+        if(first_food) {
+            std::cout << "FoodScore::EvaluateIfFoodShouldBeGenerated first_food=" << first_food << std::endl;
+            first_food = false;
             return true;
         }
         std::cout << "FoodScore::EvaluateIfFoodShouldBeGenerated is_eaten=" << is_eaten << std::endl;
@@ -37,3 +38,4 @@ void FoodScore::RewardSnake(std::unique_ptr<Snake> &snake) {
     snake->GrowBody();
     std::cout << "snake->GetScore=" << snake->GetScore() << std::endl;
 }
+

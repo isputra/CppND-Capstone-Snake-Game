@@ -12,7 +12,7 @@ Food::Food(int grid_width, int grid_height) :
 }
 
 Food::~Food(){
-    is_active = false; // we've stopped playing
+    is_active = false; // we need to signal the thread that the class has deen destroyed
     std::cout << "Food::~Food() called..." << std::endl;
     std::for_each(threads.begin(), threads.end(), [](std::thread &t) {
         std::cout << "Ending thread id=" << t.get_id() << std::endl;
@@ -32,8 +32,8 @@ void Food::RunFoodCycle(std::unique_ptr<Snake> &snake){
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
         if(CheckIfFoodIsEaten(snake) == true)
         {
-            // Here we need to check with is_active. 
-            // Otherwise, because of data race, we could call methods whose child class has been destructed.
+            // Because of data race, we could call methods whose child class has been destructed.
+            // Therefore here we need to check with is_active. 
             if(is_active) RewardSnake(snake);
         }
         if(is_active && EvaluateIfFoodShouldBeGenerated(snake) == true)
@@ -71,6 +71,9 @@ void Food::GenerateFood(std::unique_ptr<Snake> &snake){
             if(_type == FoodType::food_normal) {
                 std::lock_guard<std::mutex> lock(_mutex);
                 next_cycle = _idCnt-1;
+            } else {
+                // set timer to remove food
+                std::async(&Food::RemoveUntil, this);
             }
             return;
         }
@@ -80,15 +83,27 @@ void Food::GenerateFood(std::unique_ptr<Snake> &snake){
 template <typename T>
 bool Food::CheckSnakeCondition(T const &value_attribute, T const &value_min, T const &random_value) {
     if(value_attribute > value_min && random_value < value_attribute){
-        if(start_game) {
-            std::cout << "Food::CheckSnakeCondition start_game=" << start_game << std::endl;
-            start_game = false;
+        if(first_food) {
+            std::cout << "Food::CheckSnakeCondition first_food=" << first_food << std::endl;
+            first_food = false;
             return true;
         }
         std::cout << "Food::CheckSnakeCondition is_eaten=" << is_eaten << std::endl;
         return is_eaten;
     }
     return false;
+}
+
+void Food::RemoveUntil(){
+    std::cout << "Food::RemoveUntil #" << getID() << std::endl;
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    
+    if(is_eaten) return;
+    
+    _position.x=-1; // remove food from screen
+    _position.y=-1;
+    is_eaten = true;
+    std::cout << "Food #" << getID() << " is removed.." << std::endl;
 }
 
 int Food::_idCnt = 0;

@@ -16,13 +16,13 @@ bool FoodSlow::EvaluateIfFoodShouldBeGenerated(std::unique_ptr<Snake> &snake) {
 
     std::uniform_int_distribution<> distr(0, 100);
     float speed = snake->speed;
-    int random = distr(engine);
-    float speedMin = random/100;
-    std::cout << "FoodSlow::EvaluateIfFoodShouldBeGenerated speedMin="<< std::to_string(speedMin) << " speed="<< std::to_string(speed) << std::endl;
-    if(speed > 0.1 && speedMin < speed){
-        if(start_game) {
-            std::cout << "FoodSlow::EvaluateIfFoodShouldBeGenerated start_game=" << start_game << std::endl;
-            start_game = false;
+    float random = (distr(engine)/100.0)+1.0f;
+    float speed_min = 1.10f;
+    std::cout << "FoodSlow::EvaluateIfFoodShouldBeGenerated random="<< std::to_string(random) << " speed="<< std::to_string(speed) << std::endl;
+    if(speed > speed_min && random < speed){
+        if(first_food) {
+            std::cout << "FoodSlow::EvaluateIfFoodShouldBeGenerated first_food=" << first_food << std::endl;
+            first_food = false;
             return true;
         }
         std::cout << "FoodSlow::EvaluateIfFoodShouldBeGenerated is_eaten=" << is_eaten << std::endl;

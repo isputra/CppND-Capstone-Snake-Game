@@ -11,6 +11,7 @@ public:
     ~FoodNormal(){std::cout << "FoodNormal::~FoodNormal() called..." << std::endl;}
     bool EvaluateIfFoodShouldBeGenerated(std::unique_ptr<Snake> &snake) override;
     void RewardSnake(std::unique_ptr<Snake> &snake) override;
+    void RemoveUntil();
 };
 
 #endif
