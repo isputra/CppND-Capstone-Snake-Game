@@ -14,21 +14,22 @@ bool FoodSlow::EvaluateIfFoodShouldBeGenerated(std::unique_ptr<Snake> &snake) {
     next_cycle = next_cycle - 1;
     lck.unlock();
 
-    std::uniform_int_distribution<> distr(0, 100);
+    std::uniform_int_distribution<> distr(0, 10);
     float speed = snake->speed;
     float random = (distr(engine)/100.0);
     float speed_min = 0.10f;
-    // std::cout << "FoodSlow::EvaluateIfFoodShouldBeGenerated random="<< std::to_string(random) << " speed="<< std::to_string(speed) << std::endl;
-    if(speed > speed_min && random < speed){
-        if(first_food) {
-            std::cout << "FoodSlow::EvaluateIfFoodShouldBeGenerated first_food=" << first_food << std::endl;
-            first_food = false;
-            return true;
-        }
-        std::cout << "FoodSlow::EvaluateIfFoodShouldBeGenerated is_eaten=" << is_eaten << std::endl;
-        return is_eaten;
-    }
-    return false;
+    std::cout << "FoodSlow::EvaluateIfFoodShouldBeGenerated speed="<< std::to_string(speed) << " random="<< std::to_string(random) << " speed_min="<< std::to_string(speed_min) << std::endl;
+    return CheckSnakeCondition(speed, speed_min, random);
+    // if(speed > speed_min && random < speed){
+    //     if(first_food) {
+    //         std::cout << "FoodSlow::EvaluateIfFoodShouldBeGenerated first_food=" << first_food << std::endl;
+    //         first_food = false;
+    //         return true;
+    //     }
+    //     std::cout << "FoodSlow::EvaluateIfFoodShouldBeGenerated is_eaten=" << is_eaten << std::endl;
+    //     return is_eaten;
+    // }
+    // return false;
 }
 
 void FoodSlow::RewardSnake(std::unique_ptr<Snake> &snake) {

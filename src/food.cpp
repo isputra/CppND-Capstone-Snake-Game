@@ -83,6 +83,7 @@ void Food::GenerateFood(std::unique_ptr<Snake> &snake){
 }
 
 void Food::RemoveUntil(){
+    Uint32 frame_start = SDL_GetTicks();
     std::cout << "Food::RemoveUntil #" << getID() << " thread id=" << std::this_thread::get_id() << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(5));
     
@@ -91,7 +92,7 @@ void Food::RemoveUntil(){
     _position.x=-1; // remove food from screen
     _position.y=-1;
     is_eaten = true;
-    std::cout << "Food #" << getID() << " is removed.." << std::endl;
+    std::cout << "Food #" << getID() << " is removed after " << std::to_string(SDL_GetTicks() - frame_start) << " milliseconds.." << std::endl;
 }
 
 int Food::_idCnt = 0;

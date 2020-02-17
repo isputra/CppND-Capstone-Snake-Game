@@ -19,16 +19,17 @@ bool FoodScore::EvaluateIfFoodShouldBeGenerated(std::unique_ptr<Snake> &snake) {
     int random = distr(engine);
     int score_min = 1;
     // std::cout << "FoodScore::EvaluateIfFoodShouldBeGenerated random="<< random << std::endl;
-    if(score > score_min && random < score){
-        if(first_food) {
-            std::cout << "FoodScore::EvaluateIfFoodShouldBeGenerated first_food=" << first_food << std::endl;
-            first_food = false;
-            return true;
-        }
-        std::cout << "FoodScore::EvaluateIfFoodShouldBeGenerated is_eaten=" << is_eaten << std::endl;
-        return is_eaten;
-    }
-    return false;
+    return CheckSnakeCondition(score, score_min, random);
+//    if(score > score_min && random < score){
+//         if(first_food) {
+//             std::cout << "FoodScore::EvaluateIfFoodShouldBeGenerated first_food=" << first_food << std::endl;
+//             first_food = false;
+//             return true;
+//         }
+//         std::cout << "FoodScore::EvaluateIfFoodShouldBeGenerated is_eaten=" << is_eaten << std::endl;
+//         return is_eaten;
+//     }
+    // return false;
 }
 
 void FoodScore::RewardSnake(std::unique_ptr<Snake> &snake) {
