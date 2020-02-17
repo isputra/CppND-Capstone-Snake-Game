@@ -1,6 +1,7 @@
 #include "renderer.h"
 #include <iostream>
 #include <string>
+#include <math.h>
 
 Renderer::Renderer(const std::size_t screen_width,
                    const std::size_t screen_height,
@@ -48,33 +49,37 @@ void Renderer::Render(std::unique_ptr<Snake> &snake,
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
 
+  int pos_x;
+  int pos_y;
+  int diameter = (screen_width / grid_width + screen_height / grid_height)/2;
+
   // Clear screen
   SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
   SDL_RenderClear(sdl_renderer);
 
   // Render food normal
-  SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xCC, 0x00, 0xFF);
-  block.x = food_normal->getPosition().x * block.w + block.w/2;
-  block.y = food_normal->getPosition().y * block.h + block.h/2;
-  DrawCircle(sdl_renderer, block.x, block.y, (block.w+block.h)/4);
+  SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0x00, 0xFF);
+  pos_x = food_normal->getPosition().x * diameter + diameter/2;
+  pos_y = food_normal->getPosition().y * diameter + diameter/2;
+  DrawFilledCirle(sdl_renderer, pos_x, pos_y, diameter/2);
 
   // Render food score
-  SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0xCC, 0xCC, 0xFF);
-  block.x = food_score->getPosition().x * block.w;
-  block.y = food_score->getPosition().y * block.h;
-  SDL_RenderFillRect(sdl_renderer, &block);
+  SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0xFF, 0xFF, 0xFF);
+  pos_x = food_score->getPosition().x * diameter + diameter/2;
+  pos_y = food_score->getPosition().y * diameter + diameter/2;
+  DrawFilledCirle(sdl_renderer, pos_x, pos_y, diameter/2);
 
   // Render food slow
-  SDL_SetRenderDrawColor(sdl_renderer, 0xAA, 0xAA, 0xAA, 0xFF);
-  block.x = food_slow->getPosition().x * block.w;
-  block.y = food_slow->getPosition().y * block.h;
-  SDL_RenderDrawRect(sdl_renderer, &block);
+  SDL_SetRenderDrawColor(sdl_renderer, 0x7F, 0x7F, 0x7F, 0xFF);
+  pos_x = food_slow->getPosition().x * diameter + diameter/2;
+  pos_y = food_slow->getPosition().y * diameter + diameter/2;
+  DrawFilledCirle(sdl_renderer, pos_x, pos_y, diameter/2);
 
   // Render food shrink
-  SDL_SetRenderDrawColor(sdl_renderer, 0xBB, 0x00, 0xBB, 0xFF);
-  block.x = food_shrink->getPosition().x * block.w;
-  block.y = food_shrink->getPosition().y * block.h;
-  SDL_RenderFillRect(sdl_renderer, &block);
+  SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0x00, 0xFF, 0xFF);
+  pos_x = food_shrink->getPosition().x * diameter + diameter/2;
+  pos_y = food_shrink->getPosition().y * diameter + diameter/2;
+  DrawCircle(sdl_renderer, pos_x, pos_y, diameter/2);
 
   // Render snake's body
   SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -140,4 +145,28 @@ void Renderer::DrawCircle(SDL_Renderer * renderer, int32_t centreX, int32_t cent
          error += (tx - diameter);
       }
    }
+}
+
+// source : https://discourse.libsdl.org/t/code-for-filled-circle/5699/3
+void Renderer::DrawFilledCirle(SDL_Renderer *sdl_renderer, int x, int y, int r)
+{
+  int y1, y2;
+  SDL_Rect rect;
+  for(y1 = -r, y2 = r; y1; ++y1, --y2)
+  {
+    int xr = (int)(sqrt(r*r - y1*y1) + 0.5);
+    rect.x = x - xr;
+    rect.y = y + y1;
+    rect.w = 2 * xr;
+    rect.h = 1;
+    SDL_RenderFillRect(sdl_renderer, &rect);
+    rect.y = y + y2;
+    rect.h = 1;
+    SDL_RenderFillRect(sdl_renderer, &rect);
+  }
+  rect.x = x - r;
+  rect.y = y;
+  rect.w = 2 * r;
+  rect.h = 1;
+  SDL_RenderFillRect(sdl_renderer, &rect);
 }

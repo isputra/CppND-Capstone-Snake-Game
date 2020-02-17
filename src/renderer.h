@@ -23,6 +23,7 @@ class Renderer {
               std::unique_ptr<FoodShrink> &food_shrink);
   void UpdateWindowTitle(int score, int fps);
   void DrawCircle(SDL_Renderer * renderer, int32_t centreX, int32_t centreY, int32_t radius);
+  void DrawFilledCirle(SDL_Renderer *screen, int x, int y, int r);
 
  private:
   SDL_Window *sdl_window;
