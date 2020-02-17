@@ -24,8 +24,20 @@ public:
     virtual bool EvaluateIfFoodShouldBeGenerated(std::unique_ptr<Snake> &snake)=0;
     virtual void RewardSnake(std::unique_ptr<Snake> &snake)=0;
 
+
     template <typename T>
-    bool CheckSnakeCondition(T const &value_attribute, T const &value_min, T const &random_value);
+    bool CheckSnakeCondition(T const &value_attribute, T const &value_min, T const &random_value) {
+        if(value_attribute > value_min && random_value < value_attribute){
+            if(first_food) {
+                std::cout << "Food::CheckSnakeCondition first_food=" << first_food << std::endl;
+                first_food = false;
+                return true;
+            }
+            std::cout << "Food::CheckSnakeCondition is_eaten=" << is_eaten << std::endl;
+            return is_eaten;
+        }
+        return false;
+    }
 
     SDL_Point getPosition() const { return _position; }
     int getID() { return _id; }

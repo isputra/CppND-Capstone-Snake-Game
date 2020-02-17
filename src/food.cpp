@@ -46,9 +46,9 @@ void Food::RunFoodCycle(std::unique_ptr<Snake> &snake){
 bool Food::CheckIfFoodIsEaten(std::unique_ptr<Snake> &snake){
     int new_x = static_cast<int>(snake->head_x);
     int new_y = static_cast<int>(snake->head_y);
-    // std::cout << "_position.x=" << _position.x << " new_x=" << new_x << std::endl;
-    // std::cout << "_position.y=" << _position.y << " new_y=" << new_y << std::endl;
+
     if (_position.x == new_x && _position.y == new_y) {
+        // std::cout << "Food is about to be eaten #" << getID() << " : (" << _position.x << ", " << _position.y << ") -> (" << new_x << ", " << new_y << ")" << std::endl;
         _position.x=-1; // remove food from screen
         _position.y=-1;
         is_eaten = true;
@@ -73,33 +73,21 @@ void Food::GenerateFood(std::unique_ptr<Snake> &snake){
                 next_cycle = _idCnt-1;
             } else {
                 // set timer to remove food
-                std::async(&Food::RemoveUntil, this);
+                auto remove_thread = std::thread(&Food::RemoveUntil, this);
+                remove_thread.detach();
+                std::cout << "Food #" << getID() << " will be removed soon.." << std::endl;
             }
             return;
         }
     }
 }
 
-template <typename T>
-bool Food::CheckSnakeCondition(T const &value_attribute, T const &value_min, T const &random_value) {
-    if(value_attribute > value_min && random_value < value_attribute){
-        if(first_food) {
-            std::cout << "Food::CheckSnakeCondition first_food=" << first_food << std::endl;
-            first_food = false;
-            return true;
-        }
-        std::cout << "Food::CheckSnakeCondition is_eaten=" << is_eaten << std::endl;
-        return is_eaten;
-    }
-    return false;
-}
-
 void Food::RemoveUntil(){
-    std::cout << "Food::RemoveUntil #" << getID() << std::endl;
+    std::cout << "Food::RemoveUntil #" << getID() << " thread id=" << std::this_thread::get_id() << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(5));
     
     if(is_eaten) return;
-    
+
     _position.x=-1; // remove food from screen
     _position.y=-1;
     is_eaten = true;

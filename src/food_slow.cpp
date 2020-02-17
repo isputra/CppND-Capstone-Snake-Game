@@ -10,15 +10,15 @@ FoodSlow::FoodSlow(int grid_width, int grid_height, std::unique_ptr<Snake> &snak
 bool FoodSlow::EvaluateIfFoodShouldBeGenerated(std::unique_ptr<Snake> &snake) {
     std::unique_lock<std::mutex> lck(_mutex);
     if(next_cycle <= 0) return false;
-    std::cout << "FoodSlow::EvaluateIfFoodShouldBeGenerated next_cycle=" << next_cycle << std::endl;
+    // std::cout << "FoodSlow::EvaluateIfFoodShouldBeGenerated next_cycle=" << next_cycle << std::endl;
     next_cycle = next_cycle - 1;
     lck.unlock();
 
     std::uniform_int_distribution<> distr(0, 100);
     float speed = snake->speed;
-    float random = (distr(engine)/100.0)+1.0f;
-    float speed_min = 1.10f;
-    std::cout << "FoodSlow::EvaluateIfFoodShouldBeGenerated random="<< std::to_string(random) << " speed="<< std::to_string(speed) << std::endl;
+    float random = (distr(engine)/100.0);
+    float speed_min = 0.10f;
+    // std::cout << "FoodSlow::EvaluateIfFoodShouldBeGenerated random="<< std::to_string(random) << " speed="<< std::to_string(speed) << std::endl;
     if(speed > speed_min && random < speed){
         if(first_food) {
             std::cout << "FoodSlow::EvaluateIfFoodShouldBeGenerated first_food=" << first_food << std::endl;
