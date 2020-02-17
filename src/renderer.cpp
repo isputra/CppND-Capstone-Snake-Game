@@ -59,9 +59,9 @@ void Renderer::Render(std::unique_ptr<Snake> &snake,
 
   // Render food normal
   SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0x00, 0xFF);
-  pos_x = food_normal->getPosition().x * diameter + diameter/2;
-  pos_y = food_normal->getPosition().y * diameter + diameter/2;
-  DrawFilledCirle(sdl_renderer, pos_x, pos_y, diameter/2);
+    block.x = food_normal->getPosition().x * block.w;
+    block.y = food_normal->getPosition().y * block.h;
+    SDL_RenderFillRect(sdl_renderer, &block);
 
   // Render food score
   SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0xFF, 0xFF, 0xFF);
