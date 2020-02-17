@@ -54,9 +54,9 @@ void Renderer::Render(std::unique_ptr<Snake> &snake,
 
   // Render food normal
   SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xCC, 0x00, 0xFF);
-  block.x = food_normal->getPosition().x * block.w;
-  block.y = food_normal->getPosition().y * block.h;
-  SDL_RenderDrawRect(sdl_renderer, &block);
+  block.x = food_normal->getPosition().x * block.w + block.w/2;
+  block.y = food_normal->getPosition().y * block.h + block.h/2;
+  DrawCircle(sdl_renderer, block.x, block.y, (block.w+block.h)/4);
 
   // Render food score
   SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0xCC, 0xCC, 0xFF);
@@ -68,7 +68,7 @@ void Renderer::Render(std::unique_ptr<Snake> &snake,
   SDL_SetRenderDrawColor(sdl_renderer, 0xAA, 0xAA, 0xAA, 0xFF);
   block.x = food_slow->getPosition().x * block.w;
   block.y = food_slow->getPosition().y * block.h;
-  SDL_RenderFillRect(sdl_renderer, &block);
+  SDL_RenderDrawRect(sdl_renderer, &block);
 
   // Render food shrink
   SDL_SetRenderDrawColor(sdl_renderer, 0xBB, 0x00, 0xBB, 0xFF);
@@ -101,4 +101,43 @@ void Renderer::Render(std::unique_ptr<Snake> &snake,
 void Renderer::UpdateWindowTitle(int score, int fps) {
   std::string title{"Snake Score: " + std::to_string(score) + " FPS: " + std::to_string(fps)};
   SDL_SetWindowTitle(sdl_window, title.c_str());
+}
+
+// source https://stackoverflow.com/a/48291620
+void Renderer::DrawCircle(SDL_Renderer * renderer, int32_t centreX, int32_t centreY, int32_t radius)
+{
+   const int32_t diameter = (radius * 2);
+
+   int32_t x = (radius - 1);
+   int32_t y = 0;
+   int32_t tx = 1;
+   int32_t ty = 1;
+   int32_t error = (tx - diameter);
+
+   while (x >= y)
+   {
+      //  Each of the following renders an octant of the circle
+      SDL_RenderDrawPoint(renderer, centreX + x, centreY - y);
+      SDL_RenderDrawPoint(renderer, centreX + x, centreY + y);
+      SDL_RenderDrawPoint(renderer, centreX - x, centreY - y);
+      SDL_RenderDrawPoint(renderer, centreX - x, centreY + y);
+      SDL_RenderDrawPoint(renderer, centreX + y, centreY - x);
+      SDL_RenderDrawPoint(renderer, centreX + y, centreY + x);
+      SDL_RenderDrawPoint(renderer, centreX - y, centreY - x);
+      SDL_RenderDrawPoint(renderer, centreX - y, centreY + x);
+
+      if (error <= 0)
+      {
+         ++y;
+         error += ty;
+         ty += 2;
+      }
+
+      if (error > 0)
+      {
+         --x;
+         tx += 2;
+         error += (tx - diameter);
+      }
+   }
 }
