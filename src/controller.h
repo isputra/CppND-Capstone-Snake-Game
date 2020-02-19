@@ -1,14 +1,15 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
+#include <memory>
 #include "snake.h"
 
 class Controller {
  public:
-  void HandleInput(bool &running, Snake &snake) const;
+  void HandleInput(bool &running, std::unique_ptr<Snake> &snake) const;
 
  private:
-  void ChangeDirection(Snake &snake, Snake::Direction input,
+  void ChangeDirection(std::unique_ptr<Snake> &snake, Snake::Direction input,
                        Snake::Direction opposite) const;
 };
 
