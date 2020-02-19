@@ -1,4 +1,4 @@
-# CPPND: Capstone Snake Game
+# Snake Game
 
 This project is my version of Snake Game, which I developed as part of Capstone project in the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213). The code for this repo was inspired by [this](https://codereview.stackexchange.com/questions/212296/snake-game-in-c-with-sdl) excellent StackOverflow post and set of responses.
 
@@ -17,14 +17,6 @@ There are several files/classes in this program :
   * Food that shrink the body (`FoodShrink`), which trims the snake instead of growing it. It appears rarely and only when the Snake's body is too long.
 
 Each food is spawn into its own thread which executes an infinite while loop that only stops when the Food class is destroyed (when the game is stopped). Inside each thread, we examine whether or not the food is eaten by the Snake, reward it accordingly, and decide whether or not to generate more foods or remove a food.
-
-## Rubric Points
-In this project, I've implemented at least these rubric points :
-1. The project demonstrates an understanding of C++ functions and control structures: See Food.cpp line 37, 42, 44, 46, 55, 79.
-2. The project uses Object Oriented Programming techniques: See Food.h line 15 to end.
-3. Derived class functions override virtual base class functions. See food_score.h line 14, 15 and food_score.cpp line 12, 25.
-4. The project uses smart pointers instead of raw pointers: See game.h line 26-30.
-5. The project uses multithreading: See food.cpp line 27, 84.
 
 ## Dependencies for Running Locally
 * cmake >= 3.7
